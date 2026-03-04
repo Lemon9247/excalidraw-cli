@@ -126,6 +126,10 @@ Errors are collected and reported at the end — one bad line doesn't stop the r
 | `orange` | `#d79b00` | `#1e1e1e` |
 | `purple` | `#9673a6` | `#1e1e1e` |
 
+## AI Agent Usage
+
+This tool is built for AI coding agents. Point your agent at the repo and tell it to `cargo build --release`, then use the binary to create and edit diagrams. The text-based interface (markdown output, label references, batch DSL) needs no GUI.
+
 ## File Format
 
 `.excalidraw` — Raw JSON, used by the Excalidraw app and the Obsidian Excalidraw plugin.
