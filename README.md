@@ -6,6 +6,14 @@ Works with `.excalidraw` JSON files used by the Excalidraw app and the Obsidian 
 
 ## Install
 
+### Let your agent do it
+
+Add something like this to your agent's project instructions:
+
+> Use excalidraw-cli (https://github.com/Lemon9247/excalidraw-cli) to create and edit `.excalidraw` diagrams. Read the README for usage.
+
+### Manual
+
 ```bash
 cargo install --path .
 ```
@@ -125,10 +133,6 @@ Errors are collected and reported at the end — one bad line doesn't stop the r
 | `red` | `#b85450` | `#1e1e1e` |
 | `orange` | `#d79b00` | `#1e1e1e` |
 | `purple` | `#9673a6` | `#1e1e1e` |
-
-## AI Agent Usage
-
-This tool is built for AI coding agents. Point your agent at the repo and tell it to `cargo build --release`, then use the binary to create and edit diagrams. The text-based interface (markdown output, label references, batch DSL) needs no GUI.
 
 ## File Format
 
