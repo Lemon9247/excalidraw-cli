@@ -8,9 +8,9 @@ Works with `.excalidraw` JSON files used by the Excalidraw app and the Obsidian 
 
 ### Let your agent do it
 
-Add something like this to your agent's project instructions:
+Pass this prompt to your agent:
 
-> Use excalidraw-cli (https://github.com/Lemon9247/excalidraw-cli) to create and edit `.excalidraw` diagrams. Read the README for usage.
+> Clone https://github.com/Lemon9247/excalidraw-cli, follow the installation instructions, and install the skill file provided.
 
 ### Manual
 
