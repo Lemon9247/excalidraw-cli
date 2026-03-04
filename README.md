@@ -2,7 +2,7 @@
 
 A fast CLI tool for editing [Excalidraw](https://excalidraw.com/) diagrams from the command line. Built in Rust for near-instant startup (~8ms).
 
-Supports both `.excalidraw` (raw JSON) and `.excalidraw.md` (Obsidian's LZ-compressed format) transparently.
+Works with `.excalidraw` JSON files used by the Excalidraw app and the Obsidian Excalidraw plugin.
 
 ## Install
 
@@ -126,12 +126,9 @@ Errors are collected and reported at the end — one bad line doesn't stop the r
 | `orange` | `#d79b00` | `#1e1e1e` |
 | `purple` | `#9673a6` | `#1e1e1e` |
 
-## File Formats
+## File Format
 
-- **`.excalidraw`** — Raw JSON, used by the Excalidraw app
-- **`.excalidraw.md`** — Obsidian format with LZ-compressed JSON in a fenced `compressed-json` code block
-
-The CLI detects the format from the file extension and handles encoding/decoding automatically.
+`.excalidraw` — Raw JSON, used by the Excalidraw app and the Obsidian Excalidraw plugin.
 
 ## License
 

@@ -5,7 +5,7 @@ description: Create and edit Excalidraw diagrams — add nodes, connect them wit
 
 # /excalidraw — Diagram Editing
 
-Edit Excalidraw diagrams (`.excalidraw` and `.excalidraw.md` Obsidian files).
+Edit Excalidraw diagrams (`.excalidraw` JSON files).
 
 ## Script
 
@@ -18,15 +18,15 @@ EXCLI="SKILL_DIR/excalidraw.sh"
 ### Init a new diagram
 
 ```bash
-$EXCLI init "/path/to/diagram.excalidraw.md"
+$EXCLI init "/path/to/diagram.excalidraw"
 ```
 
-Creates an empty `.excalidraw` or `.excalidraw.md` file.
+Creates an empty `.excalidraw` file.
 
 ### Read diagram state
 
 ```bash
-$EXCLI read "/path/to/diagram.excalidraw.md"
+$EXCLI read "/path/to/diagram.excalidraw"
 ```
 
 Returns a markdown representation of all nodes, edges, frames, and groups.
@@ -34,7 +34,7 @@ Returns a markdown representation of all nodes, edges, frames, and groups.
 ### Create a node
 
 ```bash
-$EXCLI create-node "/path/to/diagram.excalidraw.md" \
+$EXCLI create-node "/path/to/diagram.excalidraw" \
     --label "My Node" \
     --shape rectangle \
     --color light-blue
@@ -51,7 +51,7 @@ Options:
 ### Create an edge
 
 ```bash
-$EXCLI create-edge "/path/to/diagram.excalidraw.md" \
+$EXCLI create-edge "/path/to/diagram.excalidraw" \
     --from "Source Node" \
     --to "Target Node" \
     --label "connects to"
@@ -68,7 +68,7 @@ Nodes can be referenced by their label text or by their element ID (from `read` 
 ### Delete an element
 
 ```bash
-$EXCLI delete "/path/to/diagram.excalidraw.md" \
+$EXCLI delete "/path/to/diagram.excalidraw" \
     --id "Node Label"
 ```
 
@@ -80,7 +80,7 @@ Options:
 Execute multiple operations in a single file load/save cycle:
 
 ```bash
-$EXCLI batch "/path/to/diagram.excalidraw.md" --script '
+$EXCLI batch "/path/to/diagram.excalidraw" --script '
 # Comments start with #
 node "CLI" --color blue --x 60 --y 0
 node "GUI" --color blue --x 340 --y 0
@@ -92,7 +92,7 @@ delete "old node"
 Or pipe from stdin:
 
 ```bash
-cat operations.txt | $EXCLI batch "/path/to/diagram.excalidraw.md"
+cat operations.txt | $EXCLI batch "/path/to/diagram.excalidraw"
 ```
 
 Batch commands: `node`, `edge`, `delete`. Each line uses the same flags as the corresponding subcommand. Errors are collected and reported at the end — one bad line doesn't stop the rest.
@@ -119,15 +119,12 @@ Batch commands: `node`, `edge`, `delete`. Each line uses the same flags as the c
 - **Color semantically** — pick a color scheme for the diagram and stick with it (e.g. blue=services, green=data, red=errors).
 - **Use batch mode** for multi-operation edits — one file load/save instead of N.
 
-## File Formats
+## File Format
 
-- `.excalidraw` — Raw JSON, used by the Excalidraw app
-- `.excalidraw.md` — Obsidian format with LZ-compressed JSON in a `compressed-json` code block. The CLI handles both transparently.
+`.excalidraw` — Raw JSON, used by the Excalidraw app and the Obsidian Excalidraw plugin.
 
 ## Finding Diagrams
 
-Obsidian Excalidraw files typically live in the vault's `Excalidraw/` directory:
-
 ```bash
-find ~/Documents/Obsidian/Claude/Excalidraw -name "*.excalidraw.md" | head -20
+find ~/Documents/Obsidian/Claude/Excalidraw -name "*.excalidraw" | head -20
 ```

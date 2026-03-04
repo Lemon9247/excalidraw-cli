@@ -42,22 +42,6 @@ fn test_init_and_read_excalidraw() {
 }
 
 #[test]
-fn test_init_and_read_obsidian_md() {
-    let path = temp_file("test_init.excalidraw.md");
-    let _ = std::fs::remove_file(&path);
-
-    let (stdout, _, ok) = run(&["init", path.to_str().unwrap()]);
-    assert!(ok, "init failed");
-    assert!(stdout.contains("Created"));
-
-    let (stdout, _, ok) = run(&["read", path.to_str().unwrap()]);
-    assert!(ok, "read of .excalidraw.md failed");
-    assert!(stdout.contains("No nodes or edges"));
-
-    std::fs::remove_file(&path).ok();
-}
-
-#[test]
 fn test_create_node() {
     let path = temp_file("test_node.excalidraw");
     let _ = std::fs::remove_file(&path);
@@ -256,33 +240,6 @@ delete "Remove"
     assert!(ok);
     assert!(stdout.contains("Keep"));
     assert!(!stdout.contains("Remove"));
-
-    std::fs::remove_file(&path).ok();
-}
-
-#[test]
-fn test_roundtrip_excalidraw_md() {
-    let path = temp_file("test_roundtrip.excalidraw.md");
-    let _ = std::fs::remove_file(&path);
-
-    // Init .excalidraw.md
-    run(&["init", path.to_str().unwrap()]);
-
-    // Add a node
-    run(&[
-        "create-node", path.to_str().unwrap(),
-        "--label", "MDNode",
-        "--color", "light-red",
-    ]);
-
-    // Read it back
-    let (stdout, _, ok) = run(&["read", path.to_str().unwrap()]);
-    assert!(ok);
-    assert!(stdout.contains("MDNode"));
-
-    // Verify the file still has the compressed-json block
-    let content = std::fs::read_to_string(&path).unwrap();
-    assert!(content.contains("compressed-json"));
 
     std::fs::remove_file(&path).ok();
 }
