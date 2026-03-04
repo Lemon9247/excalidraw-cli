@@ -66,6 +66,7 @@ pub fn save(path: &Path, file: &ExcalidrawFile) -> Result<(), String> {
         let original = fs::read_to_string(path)
             .map_err(|e| format!("Failed to read {}: {}", path.display(), e))?;
         let updated = pack_json_to_md(&original, &json)?;
+        let updated = update_text_elements(&updated, file);
         fs::write(path, updated)
             .map_err(|e| format!("Failed to write {}: {}", path.display(), e))?;
     } else {
@@ -82,14 +83,19 @@ pub fn init_file(path: &Path) -> Result<(), String> {
         elements: Vec::new(),
         extra: serde_json::Map::new(),
     };
-    // For .excalidraw.md we need a template with the compressed-json block
     if is_obsidian_format(path) {
         let json = serde_json::to_string_pretty(&file)
             .map_err(|e| format!("Failed to serialize: {}", e))?;
         let compressed = lz_str::compress_to_base64(&json);
         let wrapped = wrap_lines(&compressed, WRAP_WIDTH);
         let md = format!(
-            "# Excalidraw\n\n```compressed-json\n{}\n```\n\n%%\n# Drawing\n%%\n",
+            "---\n\nexcalidraw-plugin: parsed\ntags: [excalidraw]\n\n---\n\
+             ==⚠  Switch to EXCALIDRAW VIEW in the MORE OPTIONS menu of this document. ⚠== \
+             You can decompress Drawing data with the command palette: \
+             'Decompress current Excalidraw file'. For more info check in plugin settings under 'Saving'\n\n\n\
+             # Excalidraw Data\n\n\
+             ## Text Elements\n\n\
+             %%\n## Drawing\n```compressed-json\n{}\n```\n%%",
             wrapped
         );
         fs::write(path, md)
@@ -101,4 +107,28 @@ pub fn init_file(path: &Path) -> Result<(), String> {
             .map_err(|e| format!("Failed to write {}: {}", path.display(), e))?;
     }
     Ok(())
+}
+
+/// Update the Text Elements section in an .excalidraw.md file after modifications.
+fn update_text_elements(md: &str, file: &ExcalidrawFile) -> String {
+    let mut text_section = String::new();
+    for el in &file.elements {
+        if el.is_deleted {
+            continue;
+        }
+        if el.element_type == "text" {
+            if let Some(ref text) = el.text {
+                text_section.push_str(&format!("{} ^{}\n\n", text, el.id));
+            }
+        }
+    }
+
+    // Replace the text elements section
+    let re = Regex::new(r"## Text Elements\n([\s\S]*?)\n%%").unwrap();
+    if re.is_match(md) {
+        re.replace(md, format!("## Text Elements\n{}\n%%", text_section).as_str())
+            .to_string()
+    } else {
+        md.to_string()
+    }
 }
